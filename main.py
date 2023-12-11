@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fastapi import FastAPI, Depends, Request
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
@@ -49,3 +51,7 @@ async def read_all_items(request: Request, skip: int = 0, limit: int = 100, db: 
     return templates.TemplateResponse('index.html', {'request': request, 'items': items})
 
 
+@app.get('/search/')
+async def search(request: Request, db: Session = Depends(get_db), query: Optional[str] = None):
+    result = crud.search_item(query=query, db=db)
+    return templates.TemplateResponse('index.html', {'request': request, 'items': result})

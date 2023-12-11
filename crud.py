@@ -18,3 +18,8 @@ def get_items(db: Session, skip: int = 0, limit: int = 100):
 
 def get_item_by_id(db: Session, item_id: int):
     return db.query(models.Item).filter(models.Item.id == item_id)
+
+
+def search_item(query: str, db: Session):
+    result = db.query(models.Item).filter(models.Item.title.contains(query))
+    return result

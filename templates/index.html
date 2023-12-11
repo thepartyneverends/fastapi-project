@@ -5,6 +5,10 @@
     <title>Title</title>
 </head>
 <body>
+<form action="/search/">
+    <input type="search" name="query">
+    <button type="submit">Search</button>
+</form>
 {% for item in items %}
     <h1>{{ item.id }}</h1>
     <h1>{{ item.title }}</h1>
