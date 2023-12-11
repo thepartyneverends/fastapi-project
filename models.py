@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, MetaData
+from sqlalchemy import Column, Integer, String, Text
 from sqlalchemy.orm import declarative_base
 
 from database import engine
@@ -11,6 +11,7 @@ class Item(Base):
 
     id = Column(Integer, primary_key=True)
     title = Column(String)
+    description = Column(Text)
 
 
 Base.metadata.create_all(engine)

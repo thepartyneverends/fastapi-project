@@ -1,11 +1,21 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, Request
+from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
+from starlette.responses import HTMLResponse
+from starlette.staticfiles import StaticFiles
+from starlette.templating import Jinja2Templates
 
 import crud
+import models
 import schemas
 from database import SessionLocal
 
 app = FastAPI()
+
+# app.mount('/static', StaticFiles(directory='static'), name='static')
+
+
+templates = Jinja2Templates(directory='templates')
 
 
 def get_db():
@@ -16,7 +26,7 @@ def get_db():
         db.close()
 
 
-@app.post('/items/', response_model=schemas.Item)
+@app.post('/items/{item_id}/', response_model=schemas.Item)
 def create_item(item: schemas.ItemCreate, db: Session = Depends(get_db)):
     return crud.create_item(db=db, item=item)
 
@@ -31,3 +41,11 @@ def get_item(item_id: int, db: Session = Depends(get_db)):
 def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     items = crud.get_items(db, skip=skip, limit=limit)
     return items
+
+
+@app.get('/', response_class=HTMLResponse)
+async def read_all_items(request: Request, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    items = crud.get_items(db, skip=skip, limit=limit)
+    return templates.TemplateResponse('index.html', {'request': request, 'items': items})
+
+

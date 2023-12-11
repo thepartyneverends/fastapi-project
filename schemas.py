@@ -6,8 +6,12 @@ class ItemBase(BaseModel):
 
 
 class ItemCreate(ItemBase):
-    pass
+    title: str
 
 
 class Item(ItemBase):
     id: int
+    title: str
+
+    class Config:
+        from_attributes = True
