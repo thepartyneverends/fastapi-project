@@ -1,14 +1,11 @@
 from typing import Optional
 
 from fastapi import FastAPI, Depends, Request
-from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from starlette.responses import HTMLResponse
-from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 
 import crud
-import models
 import schemas
 from database import SessionLocal
 
@@ -55,3 +52,13 @@ async def read_all_items(request: Request, skip: int = 0, limit: int = 100, db: 
 async def search(request: Request, db: Session = Depends(get_db), query: Optional[str] = None):
     result = crud.search_item(query=query, db=db)
     return templates.TemplateResponse('index.html', {'request': request, 'items': result})
+
+
+@app.delete('/items/{item_id}')
+async def delete_item(item_id: int, db: Session = Depends(get_db)):
+    return crud.delete_item(item_id=item_id, db=db)
+
+
+@app.put('/items/{item_id}', response_model=list[schemas.Item])
+async def update_item(item: schemas.Item, item_id: int, db: Session = Depends(get_db)):
+    return crud.update_item(item_id=item_id, db=db, item=item)

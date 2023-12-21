@@ -1,3 +1,4 @@
+from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
 import models
@@ -23,3 +24,19 @@ def get_item_by_id(db: Session, item_id: int):
 def search_item(query: str, db: Session):
     result = db.query(models.Item).filter(models.Item.title.contains(query))
     return result
+
+
+def delete_item(db: Session, item_id: int):
+    item = db.get(models.Item, item_id)
+    if not item:
+        return f'Item {item_id} was not found.'
+    db.delete(item)
+    db.commit()
+    return f'Item {item_id} successfully deleted.'
+
+
+def update_item(db: Session, item_id: int, item: schemas.Item):
+    update_item_encoded = jsonable_encoder(item)
+    db_item = db.query(models.Item).filter(models.Item.id == item_id)
+    db_item = update_item_encoded
+    return db_item
