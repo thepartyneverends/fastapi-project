@@ -10,8 +10,12 @@
     <button type="submit">Search</button>
 </form>
 {% for item in items %}
-    <h1>{{ item.id }}</h1>
     <h1>{{ item.title }}</h1>
+    {% if item.description == None %}
+{% else %}
+    <h2>{{ item.description }}</h2>
+{% endif %}
+<h5>Код товара: {{ item.id }}</h5>
 {% endfor %}
 </body>
 </html>

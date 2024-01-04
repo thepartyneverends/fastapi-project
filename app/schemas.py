@@ -1,12 +1,15 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
 class ItemBase(BaseModel):
     title: str
+    description: str
 
 
 class ItemCreate(ItemBase):
-    title: str
+    pass
 
 
 class Item(ItemBase):
@@ -16,3 +19,8 @@ class Item(ItemBase):
 
     class Config:
         from_attributes = True
+
+
+class ItemUpdate(ItemBase):
+    title: Optional[str] = None
+    description: Optional[str] = None

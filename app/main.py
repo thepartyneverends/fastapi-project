@@ -59,6 +59,7 @@ async def delete_item(item_id: int, db: Session = Depends(get_db)):
     return crud.delete_item(item_id=item_id, db=db)
 
 
-@app.put('/items/{item_id}', response_model=list[schemas.Item])
-async def update_item(item: schemas.Item, item_id: int, db: Session = Depends(get_db)):
+@app.put('/items/{item_id}', response_model=schemas.Item)
+async def update_item(item: schemas.ItemUpdate, item_id: int, db: Session = Depends(get_db), ):
     return crud.update_item(item_id=item_id, db=db, item=item)
+
